@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import { Box, Button } from 'theme-ui'
-import { ModelContext } from '../App'
+import { ViewerContext } from '../App'
 
 const VisionBox = ({ }) => {
-    const options = useContext(ModelContext)
+    const options = useContext(ViewerContext)
 
     return (
         <Box sx={{ position: 'absolute', color: 'white', bottom: ['7rem', 10], right: 10 }}>

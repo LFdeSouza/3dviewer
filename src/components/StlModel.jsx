@@ -1,13 +1,13 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useThree } from '@react-three/fiber'
 import { Vector3, Box3, Euler } from 'three'
-import { ModelContext } from '../App'
+import { ViewerContext } from '../App'
 
 const StlModel = ({ models }) => {
     const groupRef = useRef()
     const { camera } = useThree()
 
-    const [options, setOptions] = useContext(ModelContext)
+    const [options, setOptions] = useContext(ViewerContext)
 
     useEffect(() => {
         // Function to center the camera on the loaded model
@@ -46,23 +46,8 @@ const StlModel = ({ models }) => {
     }
     return (
         <group ref={groupRef} >
-            {models.map((i) => (
-                <mesh
-                    onClick={(e) => handleClick(e, i.uuid)}
-                    key={i.uuid}
-                    scale={0.5}
-                    position={[-90, 100, 50]}
-                    rotation={[4.5, 0, 0]}>
-                    <primitive object={i} />
-                    <meshStandardMaterial
-                        color={options[i.uuid].color}
-                        roughness={options[i.uuid].roughness}
-                        metalness={options[i.uuid].metalness}
-                        transparent={true}
-                        opacity={options[i.uuid].opacity}
-                        visible={options[i.uuid].visible}
-                    />
-                </mesh>
+            {models.map((i, idx) => (
+                <Model key={idx} model={i} />
             ))}
         </group>
     )

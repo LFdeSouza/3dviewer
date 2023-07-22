@@ -1,5 +1,5 @@
 export function getColor(name) {
-
+    name = name.toUpperCase()
     return name.includes('AORTA') ? "#CC3300" :
         name.includes('ARTERIA') ? "#FF0000" :
             name.includes('CVI') ? "#6478FA" :
@@ -22,6 +22,6 @@ export function getColor(name) {
                                                                                 name.includes('ORGAO2') ? "#00CC00" :
                                                                                     name.includes('TECIDO1') ? "#BF8F00" :
                                                                                         name.includes('TECIDO2') ? "#008080" :
-                                                                                            ' '
+                                                                                            '#BEBEBE'
 
 }
