@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react'
-import { Box, Flex, Grid, Text, IconButton, Slider, Heading, Button, Label, Input } from 'theme-ui'
+import { useContext, useState } from 'react'
+import { Box, Flex, Grid, Text, IconButton, Slider, Heading } from 'theme-ui'
 import { ViewerContext } from '../App'
+import { HexColorPicker } from 'react-colorful'
 
 const ControlPanel = () => {
 
@@ -17,8 +18,13 @@ const ControlPanel = () => {
     }
     const handleOpacity = (value, uid) => {
         setState(prev => {
-            console.log(prev[uid])
             return { ...prev, modelOptions: { ...prev.modelOptions, [uid]: { ...prev.modelOptions[uid], opacity: value } } }
+        })
+    }
+
+    const handleColor = (value, uid) => {
+        setState(prev => {
+            return { ...prev, modelOptions: { ...prev.modelOptions, [uid]: { ...prev.modelOptions[uid], color: value } } }
         })
     }
 
@@ -26,7 +32,7 @@ const ControlPanel = () => {
         return null
     }
     return (
-        <Flex sx={{ flexDirection: 'column', justifyContent: 'space-between', position: 'absolute', left: 2, top: 2, p: 3, width: '15rem', bg: 'rgba(33, 37, 41, 0.6)', borderRadius: '5px' }}>
+        <Flex sx={{ flexDirection: 'column', justifyContent: 'space-between', position: 'absolute', left: 2, top: 2, p: 3, width: '20rem', bg: 'rgba(33, 37, 41, 0.6)', borderRadius: '5px' }}>
             <Box>
                 <Flex sx={{ alignItems: 'center', gap: 2, mb: 4 }}>
                     <IconButton sx={{ height: 'fit-content', cursor: 'pointer' }} >
@@ -36,7 +42,7 @@ const ControlPanel = () => {
                 </Flex>
                 <Flex sx={{ flexDirection: 'column' }}>
                     {Object.keys(state.modelOptions).map(i => (
-                        <ModelControls key={i} uid={i} handleVisible={handleVisible} handleOpacity={handleOpacity} modelOptions={state.modelOptions[i]} />
+                        <ModelControls key={i} uid={i} handleVisible={handleVisible} handleOpacity={handleOpacity} modelOptions={state.modelOptions[i]} handleColor={handleColor} />
                     ))}
                 </Flex>
             </Box>
@@ -51,26 +57,36 @@ const ControlPanel = () => {
 export default ControlPanel
 
 
-const ModelControls = ({ uid, handleOpacity, handleVisible, modelOptions }) => {
-    const [opacitySliderOpen, setOpacitySliderOpen] = useState(false)
+const ModelControls = ({ uid, handleOpacity, handleVisible, modelOptions, handleColor }) => {
+    const [showColorPicker, setShowColorPicker] = useState(false)
 
-    return <Grid columns={[3, '1fr 1fr 1fr 1fr']} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Text sx={{ fontSize: 12 }}>{modelOptions.name.split(".")[0]}</Text>
-        <IconButton sx={{ cursor: 'pointer', height: '1.5rem' }}
-            onClick={(e) => handleVisible(e, uid)}
-        ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height={16} fill='white'><title>eye-circle-outline</title><path d="M12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,11A1,1 0 0,1 13,12A1,1 0 0,1 12,13A1,1 0 0,1 11,12A1,1 0 0,1 12,11M12,8C14.63,8 17,9.57 18,12C16.62,15.31 12.81,16.88 9.5,15.5C7.92,14.84 6.66,13.58 6,12C7,9.57 9.37,8 12,8M12,9.5A2.5,2.5 0 0,0 9.5,12A2.5,2.5 0 0,0 12,14.5A2.5,2.5 0 0,0 14.5,12A2.5,2.5 0 0,0 12,9.5" /></svg>
-        </IconButton>
-        <Box sx={{ position: 'relative' }}>
-            <IconButton sx={{ cursor: 'pointer', height: '1.5rem' }}
-                onClick={() => setOpacitySliderOpen(!opacitySliderOpen)}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height={16} fill="white"><title>circle-opacity</title><path d="M18 10V8H20V10H18M18 12V10H16V12H18M18 8V6H16V8H18M16 2.84V4H18C17.37 3.54 16.71 3.15 16 2.84M18 4V6H20C19.42 5.25 18.75 4.58 18 4M20 6V8H21.16C20.85 7.29 20.46 6.63 20 6M22 12C22 11.32 21.93 10.65 21.8 10H20V12H22M16 6V4H14V6H16M16 16H18V14H16V16M18 18H20L20 18V16H18V18M16 20H18L18 20V18H16V20M14 21.8C14.7 21.66 15.36 21.44 16 21.16V20H14V21.8M18 14H20V12H18V14M16 8H14V10H16V8M20 16H21.16C21.44 15.36 21.66 14.7 21.8 14H20V16M16 12H14V14H16V12M12 18V16H14V14H12V12H14V10H12V8H14V6H12V4H14V2.2C13.35 2.07 12.69 2 12 2C6.5 2 2 6.5 2 12S6.5 22 12 22V20H14V18H12M14 18H16V16H14V18Z" /></svg>
+    return <Box sx={{ alignItems: 'center', justifyContent: 'center', overflow: 'auto', p: 2, bg: 'rgba(73, 80, 87, 0.7)', borderRadius: '4px', my: 1 }}>
+        <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2, }}>
+            <Text sx={{ fontSize: [12, 14, 16] }}>{modelOptions.name.split(".")[0]}</Text>
+            <Box sx={{}}>
+                <Box onClick={() => setShowColorPicker(!showColorPicker)} sx={{ height: '1.4rem', width: '1.4rem', bg: modelOptions.color, borderRadius: '5px', cursor: 'pointer' }}></Box>
+                {showColorPicker &&
+                    <Box sx={{ position: 'absolute' }}>
+                        <HexColorPicker color={modelOptions.color} onChange={(e) => handleColor(e, uid)} />
+                    </Box>
+                }
+            </Box>
+        </Flex>
+        <Flex sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+            <IconButton sx={{ cursor: 'pointer', height: '1rem', width: '1.rem' }}
+                onClick={(e) => handleVisible(e, uid)}
+            >
+                {modelOptions.opacity < 0.1 ?
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill='#adb5bd'><title>eye-off-outline</title><path d="M2,5.27L3.28,4L20,20.72L18.73,22L15.65,18.92C14.5,19.3 13.28,19.5 12,19.5C7,19.5 2.73,16.39 1,12C1.69,10.24 2.79,8.69 4.19,7.46L2,5.27M12,9A3,3 0 0,1 15,12C15,12.35 14.94,12.69 14.83,13L11,9.17C11.31,9.06 11.65,9 12,9M12,4.5C17,4.5 21.27,7.61 23,12C22.18,14.08 20.79,15.88 19,17.19L17.58,15.76C18.94,14.82 20.06,13.54 20.82,12C19.17,8.64 15.76,6.5 12,6.5C10.91,6.5 9.84,6.68 8.84,7L7.3,5.47C8.74,4.85 10.33,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C12.69,17.5 13.37,17.43 14,17.29L11.72,15C10.29,14.85 9.15,13.71 9,12.28L5.6,8.87C4.61,9.72 3.78,10.78 3.18,12Z" /></svg>
+                    :
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill='#adb5bd'><title>eye-outline</title><path d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z" /></svg>
+                }
             </IconButton>
-            {opacitySliderOpen && <OpacitySlider uid={uid} handleOpacity={handleOpacity} value={modelOptions.opacity} />}
-        </Box>
-        {/* <Box>
-            <input type="color" id="uid" name="uid" value={options.color} />
-        </Box> */}
-    </Grid>
+            <Slider sx={{ width: '80%' }} min={0} max={1} value={modelOptions.opacity} step={0.1} onChange={(e) => handleOpacity(e)} />
+
+        </Flex>
+
+    </Box>
 }
 
 const OpacitySlider = ({ handleOpacity, uid, value }) => {
@@ -78,3 +94,8 @@ const OpacitySlider = ({ handleOpacity, uid, value }) => {
         <Slider min={0} max={1} defaultValue={value} step={0.1} onChange={(e) => handleOpacity(e.target.value, uid)} />
     </Flex>
 }
+
+const ColorPicker = ({ color, setColor }) => (
+    <Box sx={{ position: 'absolute', top: 0, right: 0 }}>
+        <HexColorPicker color={color} onChange={setColor} />
+    </Box>)

@@ -1,47 +1,104 @@
-import { useState, useEffect, useContext, createContext } from 'react'
+import { useState, useEffect, createContext } from 'react'
 import { Flex, Box, Image, Text } from 'theme-ui'
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
-import Viewer from './components/Viewer'
 import { getColor } from './components/getColors'
 import ControlPanel from './components/ControlPanel'
-import { useLoader, Canvas } from '@react-three/fiber'
-import { Environment, OrbitControls } from '@react-three/drei'
+import { Canvas } from '@react-three/fiber'
+import { OrbitControls, useTexture } from '@react-three/drei'
 import ModelGroup from './components/ModelGroup'
+import Model from './components/ModelOld'
+import Model2 from './components/Model'
+import { TextureLoader } from 'three'
 
 export const ViewerContext = createContext()
 
 function App() {
-  const [darkTheme, setDarkTheme] = useState(true)
-  const [geometry, setGeometry] = useState(['Artery.obj', 'High tumor.obj', 'IVC.obj', 'Portal.obj', 'PV1.obj', 'PV2.obj', 'PV3.obj', 'PV4.obj', 'Vein.obj'])
-  const [modelOptions, setModelOptions] = useState({})
+  // const [files, setFiles] = useState(['OSSO.stl'])
+  // const [files, setFiles] = useState(['r2-d2.obj'])
+  // const [files, setFiles] = useState(['AORTA.stl', 'TROMBO.stl'])
+  const [files, setFiles] = useState(['Artery.obj', 'High tumor.obj', 'IVC.obj', 'Portal.obj', 'PV1.obj', 'PV2.obj', 'PV3.obj', 'PV4.obj', 'Vein.obj'])
+  // const [files, setFiles] = useState(['torax/Arteria.obj',
+  //   'torax/Bronquio.obj',
+  //   'torax/LID.obj',
+  //   'torax/LM.obj',
+  //   'torax/LSD #S1.obj',
+  //   'torax/LSD #S2.obj',
+  //   'torax/LSD #S3.obj',
+  //   'torax/Tumor.obj',
+  //   'torax/Veia.obj',
+  // ])
+
+
   const [state, setState] = useState({
-    geometries: [],
+    geometries: {},
     modelOptions: {},
     loaded: false,
     darkTheme: true
   })
 
+  const loadModels = async (files) => {
+    const type = files[0].split(".")[files[0].split(".").length - 1]
+    const textureLoader = new TextureLoader()
+    const texture = await textureLoader.loadAsync('matcaps/matcap20.png')
+    //default 9 or 20
+    const geometries = await Promise.all(
+      files.map(async (file) => {
+        try {
+          const loader = type === 'obj' ? new OBJLoader : new STLLoader
+          const geometry = await loader.loadAsync(file)
+          geometry.name = file.split("/").join('')
+          return geometry;
+        } catch (err) {
+          console.log(err);
+        }
+      })
+    );
+    const modelOptions = geometries.reduce((result, i) => {
+      result[i.uuid] = {
+        name: i.name,
+        color: getColor(i.name),
+        matcap: texture,
+        opacity: 1,
+        loaded: true,
+        isObj: i.name.split(".")[i.name.split(".").length - 1] === 'obj'
+      }
+      return result
+    }, {})
+    setState(prev => ({ ...prev, geometries, modelOptions }));
+  };
+
+  useEffect(() => {
+    loadModels(files)
+  }, [files])
+
+
+
   const darkBg = 'radial-gradient(circle, rgba(71,71,91,1) 0%, rgba(47,49,70,1) 100%);'
   const lightBg = 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(224,224,224,1) 100%, rgba(0,212,255,1) 100%)'
 
   return (
-    <ViewerContext.Provider value={{ modelOptions, setModelOptions, state, setState }} >
-      <Flex p={0} sx={{ position: 'relative', background: darkTheme ? darkBg : lightBg, width: '100vw', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
+    <ViewerContext.Provider value={{ state, setState }} >
+      <Flex p={0} sx={{ position: 'relative', background: state.darkTheme ? darkBg : lightBg, width: '100vw', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
         <Flex sx={{ position: 'absolute', top: 3, right: 0, flexDirection: 'column', gap: 2, alignItems: 'center' }}>
           <Image src="bmk.png" sx={{ height: ['4rem', '5rem', '10rem'] }} />
         </Flex>
         <Canvas>
-          <ModelGroup models={geometry} />
+          {!!state.geometries.length &&
+            <ModelGroup />
+          }
+
           {/* <ambientLight /> */}
           {/* <Environment preset='city' /> */}
           {/* <Environment files='industrial.hdr' /> */}
           {/* <pointLight position={[10, 10, 10]} castShadow /> */}
           <OrbitControls enableDamping={false} />
+          {/* <axesHelper args={[100]} /> */}
         </Canvas>
         <ControlPanel />
+
       </Flex>
-    </ViewerContext.Provider>
+    </ViewerContext.Provider >
   )
 }
 

@@ -1,10 +1,10 @@
 export function getColor(name) {
     name = name.toUpperCase()
-    return name.includes('AORTA') ? "#CC3300" :
-        name.includes('ARTERIA') ? "#FF0000" :
+    return name.includes('AORTA') || name.includes('IVC') ? "#CC3300" :
+        name.includes('ARTERIA') || name.includes('ARTERY') ? "#FF0000" :
             name.includes('CVI') ? "#6478FA" :
-                name.includes('VEIA') ? "#92A1FF" :
-                    name.includes('PORTA') ? "#FA87F5" :
+                name.includes('VEIA') || name.includes('VEIN') ? "#92A1FF" :
+                    name.includes('PORTA') || name.includes('PORTAL') ? "#FA87F5" :
                         name.includes('OSSO') ? "#C9C9C9" :
                             name.includes('CALCIO') ? "#FFFFFF" :
                                 name.includes('METAL1') ? "#1E43AA" :
@@ -21,7 +21,13 @@ export function getColor(name) {
                                                                             name.includes('ORGAO1') ? "#CC3300" :
                                                                                 name.includes('ORGAO2') ? "#00CC00" :
                                                                                     name.includes('TECIDO1') ? "#BF8F00" :
-                                                                                        name.includes('TECIDO2') ? "#008080" :
-                                                                                            '#BEBEBE'
+                                                                                        name.includes('PV1') ? "#bab8b5" :
+                                                                                            name.includes('PV2') ? "#b87333" :
+                                                                                                name.includes('PV3') ? "#074d2e" :
+                                                                                                    name.includes('PV4') ? "#420219" :
+                                                                                                        name.includes('PV5') ? "#FF5733" :
+                                                                                                            name.includes('PV6') ? "#FFFF00" :
+                                                                                                                name.includes('PV7') ? "#008080" :
+                                                                                                                    '#b87333'
 
 }
