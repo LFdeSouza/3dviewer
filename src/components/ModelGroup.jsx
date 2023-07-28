@@ -17,25 +17,17 @@ const ModelGroup = () => {
     }
 
     useEffect(() => {
-        const centerCameraOnModel = () => {
-            if (groupRef.current) {
-                groupRef.current.rotation.x += 4.8 //Correct angle
-                centerGroup()
-                // camera.position.setZ(140) //get camera view farther from object
-                // camera.lookAt(modelCenter);
-            }
+        if (groupRef.current) {
+            groupRef.current.rotation.x += 4.8 //Correct angle
+            centerGroup()
         }
-        centerCameraOnModel()
+        // }
     }, [camera])
 
     useEffect(() => {
         centerGroup()
         camera.position.set(state.camera.x, state.camera.y, state.camera.z)
-
-        // camera.position.setX(state.camera.x)
-        // camera.position.setY(state.camera.y)
-        // camera.position.setZ(state.camera.z)
-    }, [camera, state.camera])
+    }, [camera, state.camera, state.geometries])
 
     return (
         <group ref={groupRef} >

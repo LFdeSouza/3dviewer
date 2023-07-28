@@ -43,7 +43,7 @@ const ButtonMenu = ({ children }) => {
   }
 
   return (
-    <Box sx={{ position: 'absolute', bottom: ['4.5rem', '1.5rem'], right: '1.5rem' }}>
+    <Box sx={{ position: 'absolute', top: ['80vh', '92vh'], right: '1.5rem' }}>
       <Box sx={{ position: 'relative' }}>
         {isOpen &&
           <Flex sx={{ position: 'absolute', top: '-15rem', left: -5, flexDirection: 'column', p: 2, borderRadius: '3px', bg: state.darkTheme ? 'rgba(134, 142, 150, 0.8)' : 'rgba(134, 142, 150, 1)' }}>
@@ -60,7 +60,6 @@ const ButtonMenu = ({ children }) => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill='#ced4da'
-            // fill={state.darkTheme ? '#ced4da' : '#343a40'}
             height='100%'
             width='100%'
           ><title>rotate-360</title>

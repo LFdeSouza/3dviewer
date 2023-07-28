@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { Box, Flex, Grid, Text, IconButton, Slider, Heading, Input, Checkbox, Label } from 'theme-ui'
+import { Box, Flex, Grid, Text, IconButton, Slider, Heading, Input, Checkbox, Label, Select } from 'theme-ui'
 import { ViewerContext } from '../App'
 import { HexColorPicker } from 'react-colorful'
 import Acordeon from './Acordeon'
@@ -47,13 +47,25 @@ const ControlPanel = () => {
                 </Flex>
             </Acordeon>
 
-            <Acordeon name='Background'>
-                <Flex sx={{ alignItems: "center", cursor: 'pointer' }}>
+            <Acordeon name='Opções'>
+                <Flex sx={{ alignItems: "center", cursor: 'pointer', mb: 4 }}>
                     <Label sx={{ cursor: 'pointer' }} htmlFor='theme'>Modo escuro</Label>
                     <Checkbox sx={{ color: '#fd7e14' }} id='theme' value={state.darkTheme} onChange={handleChangeBackground} />
                 </Flex>
-            </Acordeon>
-        </Box>
+
+                <Box sx={{ alignItems: "center", cursor: 'pointer' }}>
+                    <Label sx={{ cursor: 'pointer', mb: 1 }} htmlFor='files'>Modelo</Label>
+                    <Select value={state.files} onChange={(e) => setState(prev => ({ ...prev, files: e.target.value }))}
+                        sx={{ bg: 'black' }}
+                    >
+                        <option value={0}>Fígado com tumor</option>
+                        <option value={1}>Fígado com tumor 2</option>
+                        <option value={2}>Aorta com trombose</option>
+                        <option value={3}>Pulmão com tumor</option>
+                    </Select>
+                </Box>
+            </Acordeon >
+        </Box >
     )
 }
 

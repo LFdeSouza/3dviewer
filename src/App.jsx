@@ -1,41 +1,23 @@
 import { useState, useEffect, createContext } from 'react'
-import { Flex, Image } from 'theme-ui'
+import { Flex, Image, Spinner } from 'theme-ui'
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
-import { getColor } from './components/getColors'
+import { getColor, formatName } from './components/utils'
 import ControlPanel from './components/ControlPanel'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import ModelGroup from './components/ModelGroup'
 import { TextureLoader } from 'three'
-import ViewBox from './components/ViewBox'
-import Instrucions from './components/Instrucions'
 import ButtonMenu from './components/ButtonMenu'
 
 export const ViewerContext = createContext()
 
 function App() {
-  // const [files, setFiles] = useState(['OSSO.stl'])
-  // const [files, setFiles] = useState(['AORTA.stl', 'TROMBO.stl'])
-  // const [files, setFiles] = useState(['Artery.obj', 'High tumor.obj', 'IVC.obj', 'Portal.obj', 'PV1.obj', 'PV2.obj', 'PV3.obj', 'PV4.obj', 'Vein.obj'])
-  // const [files, setFiles] = useState(['torax/Arteria.obj',
-  //   'torax/Bronquio.obj',
-  //   'torax/LID.obj',
-  //   'torax/LM.obj',
-  //   'torax/LSD S1.obj',
-  //   'torax/LSD S2.obj',
-  //   'torax/LSD S3.obj',
-  //   'torax/Tumor.obj',
-  //   'torax/Veia.obj',
-  // ])
-  const [files, setFiles] = useState(['liver/High tumor.obj',
-    'liver/IVC.obj',
-    'liver/Liver.obj',
-    'liver/Portal.obj',
-    'liver/Vein.obj'
-  ])
 
+  const [loading, setLoading] = useState(false)
   const [state, setState] = useState({
+    files: 0,
+    texture: 'matcaps/matcap14.png',
     geometries: {},
     modelOptions: {},
     loaded: false,
@@ -43,41 +25,52 @@ function App() {
     camera: { x: 0, y: 8.572527594031473e-15, z: 140, reset: false }
   })
 
-  const loadModels = async (files) => {
+  const loadModels = async () => {
+    setLoading(true)
+    const filesArr = [
+      ['liver/High tumor.obj', 'liver/IVC.obj', 'liver/Liver.obj', 'liver/Portal.obj', 'liver/Vein.obj'],
+      ['Artery.obj', 'High tumor.obj', 'IVC.obj', 'Portal.obj', 'PV1.obj', 'PV2.obj', 'PV3.obj', 'PV4.obj', 'Vein.obj'],
+      ['AORTA.stl', 'TROMBO.stl'],
+      ['torax/Arteria.obj', 'torax/Bronquio.obj', 'torax/LID.obj', 'torax/LM.obj', 'torax/LSD S1.obj', 'torax/LSD S2.obj', 'torax/LSD S3.obj', 'torax/Tumor.obj', 'torax/Veia.obj',]
+    ]
+
+    const files = filesArr[state.files]
     const type = files[0].split(".")[files[0].split(".").length - 1]
     const textureLoader = new TextureLoader()
-    const texture = await textureLoader.loadAsync('matcaps/matcap14.png')
+    const texture = await textureLoader.loadAsync(state.texture)
     //default 9 or 20 + 14
     const geometries = await Promise.all(
       files.map(async (file) => {
         try {
           const loader = type === 'obj' ? new OBJLoader : new STLLoader
           const geometry = await loader.loadAsync(file)
-          geometry.name = file.split("/").join('').replace(/#/, '')
+          geometry.name = file
           return geometry;
         } catch (err) {
           console.log(err);
         }
       })
     );
+
     const modelOptions = geometries.reduce((result, i) => {
       result[i.uuid] = {
-        name: i.name,
-        color: getColor(i.name),
+        name: formatName(i.name),
+        color: getColor(formatName((i.name))),
         matcap: texture,
         opacity: 1,
         loaded: true,
         isObj: i.name.split(".")[i.name.split(".").length - 1] === 'obj'
       }
+
       return result
     }, {})
     setState(prev => ({ ...prev, geometries, modelOptions }));
+    setLoading(false)
   };
 
   useEffect(() => {
-    loadModels(files)
-  }, [files])
-
+    loadModels()
+  }, [state.files])
 
   const darkBg = 'radial-gradient(circle, rgba(71,71,91,1) 0%, rgba(47,49,70,1) 100%);'
   const lightBg = 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(224,224,224,1) 100%, rgba(0,212,255,1) 100%)'
@@ -85,19 +78,24 @@ function App() {
   return (
     <ViewerContext.Provider value={{ state, setState }} >
       <Flex p={0} sx={{ position: 'relative', background: state.darkTheme ? darkBg : lightBg, width: '100vw', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
-        <Flex sx={{ position: 'absolute', top: 3, right: 0, flexDirection: 'column', gap: 2, alignItems: 'center' }}>
-          <Image src="bmk.png" sx={{ height: ['4rem', '5rem', '10rem'] }} />
-        </Flex>
-        <Canvas>
-          {!!state.geometries.length &&
-            <ModelGroup />
-          }
-          <OrbitControls enableDamping={false} enablePan={false} />
-        </Canvas>
-        <ControlPanel />
-        {/* <ViewBox /> */}
-        <ButtonMenu />
+        {loading ? <Spinner /> :
+          <>
+            <Flex sx={{ position: 'absolute', top: 3, right: 0, flexDirection: 'column', gap: 2, alignItems: 'center' }}>
+              <Image src="bmk.png" sx={{ height: ['4rem', '5rem', '10rem'] }} />
+            </Flex>
+            <Canvas>
+              {!!state.geometries.length &&
+                <ModelGroup />
+              }
+              <OrbitControls enableDamping={false} enablePan={false} />
+            </Canvas>
+            <ControlPanel />
+            {/* <ViewBox /> */}
+            <ButtonMenu />
+          </>
+        }
       </Flex>
+
     </ViewerContext.Provider >
   )
 }

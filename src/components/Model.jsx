@@ -21,7 +21,6 @@ const Model = ({ geometry, config }) => {
         <mesh scale={0.5} >
             <primitive object={geometry} />
             <meshMatcapMaterial
-                side={DoubleSide}
                 matcap={config.matcap}
                 transparent
                 alphaTest={0.1}
