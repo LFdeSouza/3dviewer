@@ -1,7 +1,8 @@
 import { useContext, useState } from 'react'
-import { Box, Flex, Grid, Text, IconButton, Slider, Heading } from 'theme-ui'
+import { Box, Flex, Grid, Text, IconButton, Slider, Heading, Input, Checkbox, Label } from 'theme-ui'
 import { ViewerContext } from '../App'
 import { HexColorPicker } from 'react-colorful'
+import Acordeon from './Acordeon'
 
 const ControlPanel = () => {
 
@@ -28,29 +29,31 @@ const ControlPanel = () => {
         })
     }
 
+    const handleChangeBackground = () => {
+        setState(prev => ({ ...prev, darkTheme: !prev.darkTheme }))
+    }
+
     if (!Object.keys(state.modelOptions).length) {
         return null
     }
+
     return (
-        <Flex sx={{ flexDirection: 'column', justifyContent: 'space-between', position: 'absolute', left: 2, top: 2, p: 3, width: '20rem', bg: 'rgba(33, 37, 41, 0.6)', borderRadius: '5px' }}>
-            <Box>
-                <Flex sx={{ alignItems: 'center', gap: 2, mb: 4 }}>
-                    <IconButton sx={{ height: 'fit-content', cursor: 'pointer' }} >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill='white'><title>chevron-left-box</title><path d="M19,3H5A2,2 0 0,0 3,5V19C3,20.11 3.9,21 5,21H19C20.11,21 21,20.11 21,19V5A2,2 0 0,0 19,3M15.71,16.59L14.29,18L8.29,12L14.29,6L15.71,7.41L11.12,12L15.71,16.59Z" /></svg>
-                    </IconButton>
-                    <Heading sx={{ fontSize: ['1rem', '0.8rem'] }}>Painel de Controle</Heading>
-                </Flex>
-                <Flex sx={{ flexDirection: 'column' }}>
+        <Box sx={{ position: 'absolute', left: 2, top: 2, p: 3, borderRadius: '5px' }}>
+            <Acordeon name='Modelos' defaultOpen={true}>
+                <Flex sx={{ flexDirection: 'column', }}>
                     {Object.keys(state.modelOptions).map(i => (
                         <ModelControls key={i} uid={i} handleVisible={handleVisible} handleOpacity={handleOpacity} modelOptions={state.modelOptions[i]} handleColor={handleColor} />
                     ))}
                 </Flex>
-            </Box>
+            </Acordeon>
 
-            <Box>
-
-            </Box>
-        </Flex>
+            <Acordeon name='Background'>
+                <Flex sx={{ alignItems: "center", cursor: 'pointer' }}>
+                    <Label sx={{ cursor: 'pointer' }} htmlFor='theme'>Modo escuro</Label>
+                    <Checkbox sx={{ color: '#fd7e14' }} id='theme' value={state.darkTheme} onChange={handleChangeBackground} />
+                </Flex>
+            </Acordeon>
+        </Box>
     )
 }
 
@@ -60,13 +63,13 @@ export default ControlPanel
 const ModelControls = ({ uid, handleOpacity, handleVisible, modelOptions, handleColor }) => {
     const [showColorPicker, setShowColorPicker] = useState(false)
 
-    return <Box sx={{ alignItems: 'center', justifyContent: 'center', overflow: 'auto', p: 2, bg: 'rgba(73, 80, 87, 0.7)', borderRadius: '4px', my: 1 }}>
+    return <Box sx={{ alignItems: 'center', justifyContent: 'center', p: 2, bg: 'rgba(73, 80, 87, 0.7)', borderRadius: '4px', my: 1 }}>
         <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2, }}>
             <Text sx={{ fontSize: [12, 14, 16] }}>{modelOptions.name.split(".")[0]}</Text>
-            <Box sx={{}}>
+            <Box >
                 <Box onClick={() => setShowColorPicker(!showColorPicker)} sx={{ height: '1.4rem', width: '1.4rem', bg: modelOptions.color, borderRadius: '5px', cursor: 'pointer' }}></Box>
                 {showColorPicker &&
-                    <Box sx={{ position: 'absolute' }}>
+                    <Box sx={{ position: 'absolute', p: 2 }}>
                         <HexColorPicker color={modelOptions.color} onChange={(e) => handleColor(e, uid)} />
                     </Box>
                 }
@@ -82,7 +85,7 @@ const ModelControls = ({ uid, handleOpacity, handleVisible, modelOptions, handle
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill='#adb5bd'><title>eye-outline</title><path d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z" /></svg>
                 }
             </IconButton>
-            <Slider sx={{ width: '80%' }} min={0} max={1} value={modelOptions.opacity} step={0.1} onChange={(e) => handleOpacity(e)} />
+            <Slider sx={{ width: '80%' }} min={0} max={1} value={modelOptions.opacity} step={0.1} onChange={(e) => handleOpacity(e.target.value, uid)} />
 
         </Flex>
 

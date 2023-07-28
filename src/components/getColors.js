@@ -9,7 +9,7 @@ export function getColor(name) {
                             name.includes('CALCIO') ? "#FFFFFF" :
                                 name.includes('METAL1') ? "#1E43AA" :
                                     name.includes('METAL2') ? "#0A64FF" :
-                                        name.includes('TUMOR') ? "#C45911" :
+                                        name.includes('TUMOR') || name.includes('toraxTumor') ? "#C45911" :
                                             name.includes('CISTO') ? "#538135" :
                                                 name.includes('TRAQUEIA') ? "#538135" :
                                                     name.includes('COLON') ? "#F7CAAC" :
@@ -21,13 +21,26 @@ export function getColor(name) {
                                                                             name.includes('ORGAO1') ? "#CC3300" :
                                                                                 name.includes('ORGAO2') ? "#00CC00" :
                                                                                     name.includes('TECIDO1') ? "#BF8F00" :
-                                                                                        name.includes('PV1') ? "#bab8b5" :
-                                                                                            name.includes('PV2') ? "#b87333" :
-                                                                                                name.includes('PV3') ? "#074d2e" :
-                                                                                                    name.includes('PV4') ? "#420219" :
-                                                                                                        name.includes('PV5') ? "#FF5733" :
-                                                                                                            name.includes('PV6') ? "#FFFF00" :
-                                                                                                                name.includes('PV7') ? "#008080" :
-                                                                                                                    '#b87333'
+                                                                                        name.includes('PV1') || name.includes('LID') ? "#6EFFB7" :
+                                                                                            name.includes('PV2') || name.includes('LM') ? "#A46DCe" :
+                                                                                                name.includes('PV3') || name.includes('toraxLSD S1') ? "CEFFB7" :
+                                                                                                    name.includes('PV4') || name.includes('toraxLSD S2') ? "FA9DDF" :
+                                                                                                        name.includes('PV5') || name.includes('toraxLSD S3') ? "#FF5733" :
+                                                                                                            name.includes('PV6') ? "#F3FF6D" :
+                                                                                                                name.includes('PV7') ? "#71FAFA" :
+                                                                                                                    randomColor()
 
+}
+
+function randomColor() {
+    const colors = ["#6EFFB7",
+        "#A46DCe",
+        "#CEFFB7",
+        "#FA9DDF",
+        "#FF5733",
+        "#F3FF6D",
+        "#71FAFA",
+    ]
+    const random = Math.floor(Math.random() * 6)
+    return colors[random]
 }
