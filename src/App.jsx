@@ -58,7 +58,7 @@ function App() {
         color: getColor(formatName((i.name))),
         matcap: texture,
         opacity: 1,
-        loaded: true,
+        transparent: false,
         isObj: i.name.split(".")[i.name.split(".").length - 1] === 'obj'
       }
 

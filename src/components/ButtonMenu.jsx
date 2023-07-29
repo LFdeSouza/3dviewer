@@ -46,7 +46,7 @@ const ButtonMenu = ({ children }) => {
     <Box sx={{ position: 'absolute', top: ['80vh', '92vh'], right: '1.5rem' }}>
       <Box sx={{ position: 'relative' }}>
         {isOpen &&
-          <Flex sx={{ position: 'absolute', top: '-15rem', left: -5, flexDirection: 'column', p: 2, borderRadius: '3px', bg: state.darkTheme ? 'rgba(134, 142, 150, 0.8)' : 'rgba(134, 142, 150, 1)' }}>
+          <Flex sx={{ position: 'absolute', top: '-16rem', left: '-4.8rem', flexDirection: 'column', p: 3, borderRadius: '3px', bg: state.darkTheme ? 'rgba(134, 142, 150, 0.8)' : 'rgba(134, 142, 150, 1)' }}>
             <Button sx={{ bg: 'rgba(33, 37, 41, 0.6)', display: 'block', mb: 1, cursor: 'pointer' }} onClick={() => handleRotation('front')}>Frontal</Button>
             <Button sx={{ bg: 'rgba(33, 37, 41, 0.6)', display: 'block', mb: 1, cursor: 'pointer' }} onClick={() => handleRotation('upper')}>Superior</Button>
             <Button sx={{ bg: 'rgba(33, 37, 41, 0.6)', display: 'block', mb: 1, cursor: 'pointer' }} onClick={() => handleRotation('bottom')}>Inferior</Button>

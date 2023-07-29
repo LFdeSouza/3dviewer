@@ -19,7 +19,7 @@ const ControlPanel = () => {
     }
     const handleOpacity = (value, uid) => {
         setState(prev => {
-            return { ...prev, modelOptions: { ...prev.modelOptions, [uid]: { ...prev.modelOptions[uid], opacity: value } } }
+            return { ...prev, modelOptions: { ...prev.modelOptions, [uid]: { ...prev.modelOptions[uid], opacity: value, transparent: value > 0.9 ? false : true } } }
         })
     }
 
