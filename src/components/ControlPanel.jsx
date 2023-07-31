@@ -72,19 +72,15 @@ export default ControlPanel
 
 
 const ModelControls = ({ uid, handleOpacity, handleVisible, modelOptions, handleColor }) => {
-    const [showColorPicker, setShowColorPicker] = useState(false)
-
     return <Box sx={{ alignItems: 'center', justifyContent: 'center', p: 2, bg: 'rgba(73, 80, 87, 0.7)', borderRadius: '4px', my: 1 }}>
         <Flex sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2, }}>
             <Text sx={{ fontSize: [12, 14, 16] }}>{modelOptions.name}</Text>
-            <Box >
-                <Box onClick={() => setShowColorPicker(!showColorPicker)} sx={{ height: '1.4rem', width: '1.4rem', bg: modelOptions.color, borderRadius: '5px', cursor: 'pointer' }}></Box>
-                {showColorPicker &&
-                    <Box sx={{ position: 'absolute', p: 2 }}>
-                        <HexColorPicker style={{ height: '10rem', width: '10rem' }} color={modelOptions.color} onChange={(e) => handleColor(e, uid)} />
-                    </Box>
-                }
-            </Box>
+
+            <Input
+                sx={{ padding: 0, cursor: 'pointer', height: '1.8rem', width: '1.6rem', border: 'none', outline: 'none', appearance: 'none', '&::-webkit-appearance': 'none', '&::-moz-appearance': 'none', '&::-webkit-color-swatch': { borderRadius: '5px', border: 'none' } }}
+                type='color' value={modelOptions.color}
+                color={modelOptions.color}
+                onChange={(e) => handleColor(e.target.value, uid)} />
         </Flex>
         <Flex sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
             <IconButton sx={{ cursor: 'pointer', height: '1rem', width: '1.rem' }}
