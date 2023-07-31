@@ -77,7 +77,7 @@ const ModelControls = ({ uid, handleOpacity, handleVisible, modelOptions, handle
             <Text sx={{ fontSize: [12, 14, 16] }}>{modelOptions.name}</Text>
 
             <Input
-                sx={{ padding: 0, cursor: 'pointer', height: '1.8rem', width: '1.6rem', border: 'none', outline: 'none', appearance: 'none', '&::-webkit-appearance': 'none', '&::-moz-appearance': 'none', '&::-webkit-color-swatch': { borderRadius: '5px', border: 'none' } }}
+                sx={{ padding: 0, cursor: 'pointer', height: '1.8rem', width: '1.6rem', border: 'none', outline: 'none', appearance: 'none', '&::WebkitAppearance': 'none', '&::MozAppearance': 'none', '&::-webkit-color-swatch': { borderRadius: '5px', border: 'none' } }}
                 type='color' value={modelOptions.color}
                 color={modelOptions.color}
                 onChange={(e) => handleColor(e.target.value, uid)} />

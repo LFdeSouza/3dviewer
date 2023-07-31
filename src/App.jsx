@@ -17,8 +17,9 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [state, setState] = useState({
     files: 0,
-    texture: 'matcaps/matcap14.png',
     // texture: 'matcaps/matcap14.png',
+    texture: 'matcaps/matcap22.png',
+    // texture: 'matcaps/matcap16.png',
     geometries: {},
     modelOptions: {},
     loaded: false,
@@ -88,7 +89,8 @@ function App() {
               {!!state.geometries.length &&
                 <ModelGroup />
               }
-              <OrbitControls enableDamping={false} enablePan={false} />
+              <OrbitControls enableDamping={false} />
+              {/* <OrbitControls enableDamping={false} enablePan={false} /> */}
             </Canvas>
             <ControlPanel />
             {/* <ViewBox /> */}
