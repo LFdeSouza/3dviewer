@@ -5,7 +5,7 @@ import { HexColorPicker } from 'react-colorful'
 
 const Acordeon = ({ children, name, defaultOpen }) => {
 
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(defaultOpen)
 
     return (
         <Box

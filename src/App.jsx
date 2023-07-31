@@ -18,6 +18,7 @@ function App() {
   const [state, setState] = useState({
     files: 0,
     texture: 'matcaps/matcap14.png',
+    // texture: 'matcaps/matcap14.png',
     geometries: {},
     modelOptions: {},
     loaded: false,
@@ -31,7 +32,7 @@ function App() {
       ['liver/High tumor.obj', 'liver/IVC.obj', 'liver/Liver.obj', 'liver/Portal.obj', 'liver/Vein.obj'],
       ['liver2/Artery.obj', 'liver2/High tumor.obj', 'liver2/IVC.obj', 'liver2/Portal.obj', 'liver2/PV1.obj', 'liver2/PV2.obj', 'liver2/PV3.obj', 'liver2/PV4.obj', 'liver2/Vein.obj'],
       ['carotid/AORTA.stl', 'carotid/TROMBO.stl'],
-      ['torax/Arteria.obj', 'torax/Bronquio.obj', 'torax/LID.obj', 'torax/LM.obj', 'torax/LSD S1.obj', 'torax/LSD S2.obj', 'torax/LSD S3.obj', 'torax/Tumor.obj', 'torax/Veia.obj',]
+      ['torax/Arteria.obj', 'torax/Bronquio.obj', 'torax/LID.obj', 'torax/LM.obj', 'torax/LSD S1.obj', 'torax/LSD S2.obj', 'torax/LSD S3.obj', 'torax/Tumor.obj', 'torax/Veia.obj'],
     ]
 
     const files = filesArr[state.files]
